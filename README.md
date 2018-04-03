@@ -1,5 +1,5 @@
 # Web-Server
-1. Install dependents.
+1. Install dependencies.
 ```
 npm install
 ```
