@@ -4,40 +4,9 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var stylus = require('stylus');
-
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
-
+var router = express.Router();
 
 var app = express();
-
-// Session manager.
-var session = require('express-session');
-var RedisStore = require('connect-redis')(session);
-
-// 创建Redis客户端
-var config = {
-  'cookie' : {'maxAge' : 1800000},
-  'sessionStore' : {
-    'host' : '127.0.0.1', 
-    'port' : '6379',
-    'pass' : 'password',
-    'db' : 1, 
-    'ttl' : 60*30,
-    'logErrors' : true
-  }
-}
-
-app.use(session({
-  name : 'sid',
-  secret : 'password',
-  resave : true,
-  rolling : true,
-  saveUninitialized : false,
-  cookie : config.cookie,
-  store: new RedisStore(config.sessionStore),
-}));
-
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -50,11 +19,24 @@ app.use(cookieParser());
 app.use(stylus.middleware(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'dist')));
 
-
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
+// mysql connection middleware
+var mysql = require('mysql'),
+    myConnection = require('express-myconnection'),
+    dbOptions = {
+      host: '127.0.0.1',
+      user: 'root',
+      password: 'password',
+      database: 'zhidan'
+    };
+app.use(myConnection(mysql, dbOptions, 'pool'));
 
 // TODO: make route
+// controllers
+var createRestaurant = require('./controllers/createRestaurant');
+
+// routers
+router.post('/restaurant/account', createRestaurant);
+app.use(router);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
