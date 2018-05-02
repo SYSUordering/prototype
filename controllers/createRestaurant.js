@@ -5,7 +5,7 @@ var createRestaurant = function(req, res, next) {
     if (req.body.number === undefined 
         || req.body.password === undefined 
         || req.body.restaurant_name == undefined) {
-        res.status(500).send('Something broke!')
+        res.status(500).send('Internal Server Error')
         return
     }
 
@@ -17,9 +17,9 @@ var createRestaurant = function(req, res, next) {
         if (err) {
             if (result !== undefined) console.log(result)
             console.log(err)
-            return res.status(500).send('Something broke!')
+            return res.status(500).send('Internal Server Error')
         }
-        res.status(200).send('OK')
+        res.status(201).send('OK')
     })
     req.getConnection(inserter)
 }

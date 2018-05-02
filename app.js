@@ -33,8 +33,10 @@ app.use(myConnection(mysql, dbOptions, 'pool'));
 // TODO: make route
 // controllers
 var createRestaurant = require('./controllers/createRestaurant');
+var getRestaurant = require('./controllers/getRestaurant');
 
 // routers
+router.get('/restaurant/account', getRestaurant);
 router.post('/restaurant/account', createRestaurant);
 app.use(router);
 
