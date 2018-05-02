@@ -1,5 +1,5 @@
 var db = require('../db')
-// Create restaurant account.
+// Get restaurant account.
 var getRestaurant = function(req, res, next) {
     // Valid the form data.
     if (req.query.number === undefined) {
@@ -18,8 +18,12 @@ var getRestaurant = function(req, res, next) {
             console.log(err)
             return res.status(500).send('Internal Server Error. Database error.')
         }
-        // delete result[0]['manager_password']
-        res.status(200).send(result[0])
+        else if (result[0] === undefined) {
+            res.status(500).send('Internal Server Error. The restaurant is not exist.')
+        }
+        else {
+            res.status(200).send(result[0])
+        }
     })
     req.getConnection(selector)
 

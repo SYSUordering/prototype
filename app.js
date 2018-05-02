@@ -30,14 +30,43 @@ var mysql = require('mysql'),
     };
 app.use(myConnection(mysql, dbOptions, 'pool'));
 
+// Redis stores session
+var expressSession = require('express-session');  // 该中间件使得req有session属性
+var RedisStore = require('connect-redis')(expressSession);
+var redisConfig={
+    'cookie' : {
+       'maxAge' : 1800000  // 30 * 60 * 1000 ms = 30 mins
+    },
+    'sessionStore' : {
+        'host' : '127.0.0.1',
+        'port' : '6379',
+        'pass' : 'password',
+        'db' : 1,
+        'ttl' : 1800, // 60 * 30 sec = 30 mins
+        'logErrors' : true
+    }
+}
+app.use(expressSession({
+    name : 'sid',
+    secret : 'zhidan',
+    resave : true,
+    rolling: true,
+    saveUninitialized : false,
+    cookie : redisConfig.cookie,
+    store : new RedisStore(redisConfig.sessionStore)
+}));
+
 // TODO: make route
 // controllers
+var createSession = require('./controllers/createSession');
 var createRestaurant = require('./controllers/createRestaurant');
 var getRestaurant = require('./controllers/getRestaurant');
 
 // routers
-router.get('/restaurant/account', getRestaurant);
-router.post('/restaurant/account', createRestaurant);
+router.post('/session', createSession);
+router.get('/restaurant', getRestaurant);
+router.post('/restaurant', createRestaurant);
+
 app.use(router);
 
 // catch 404 and forward to error handler
