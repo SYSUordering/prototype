@@ -19,7 +19,7 @@ app.use(cookieParser());
 app.use(stylus.middleware(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'dist')));
 
-// mysql connection middleware
+// Mysql connection middleware
 var mysql = require('mysql'),
     myConnection = require('express-myconnection'),
     dbOptions = {
@@ -58,14 +58,15 @@ app.use(expressSession({
 
 // TODO: make route
 // controllers
-var createSession = require('./controllers/createSession');
-var createRestaurant = require('./controllers/createRestaurant');
-var getRestaurant = require('./controllers/getRestaurant');
+var session = require('./controllers/session');
+var restaurant = require('./controllers/restaurant');
 
 // routers
-router.post('/session', createSession);
-router.get('/restaurant', getRestaurant);
-router.post('/restaurant', createRestaurant);
+router.post('/session', session.create)
+router.get('/session', session.get)
+router.delete('/session', session.delete)
+router.get('/restaurant', restaurant.get)
+router.post('/restaurant', restaurant.create)
 
 app.use(router);
 
