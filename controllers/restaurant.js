@@ -1,7 +1,7 @@
-var db = require('../db')
 var crypto = require('crypto')
-// Create restaurant account.
-var create = function(req, res, next) {
+var Restaurant = require('../models/restaurant')
+// Register restaurant account.
+var registerRestaurant = function(req, res, next) {
     // Valid the form data.
     if (req.body.number === undefined 
         || req.body.number === ''
@@ -9,60 +9,87 @@ var create = function(req, res, next) {
         || req.body.password === ''
         || req.body.restaurant_name === undefined
         || req.body.restaurant_name === '') {
-        console.log('Error: wrong post format.')
-        res.status(400).send('Error: wrong post format.')
-        return
+        console.log('[Error] wrong post format.')
+        return res.status(400).json({
+            errcode: 400,
+            errmsg: '[Error] wrong post format.'
+        })
     }
 
     // Get md5(password)
     var md5 = crypto.createHash('md5')
     var password = md5.update(req.body.password).digest('hex')
 
-    var sql = 'INSERT INTO restaurant (manager_number, manager_password, restaurant_name) VALUES (?, ?, ?)',
-        value = [req.body.number, password, req.body.restaurant_name]
-
-    // Database operation.
-    var inserter = db.inserter(sql, value, function(err, result) {
+    Restaurant.create(req.body.number, password, req.body.restaurant_name)
+    .then(function(result) {
+        let restaurant = result[0]
+        restaurant.categories = null
+        return res.status(201).json({
+            code: 201,
+            msg: '[Success] Created',
+            data: restaurant
+        })
+    })
+    .catch(function(err) {
         if (err) {
             console.log('Error: Duplicate number.')
-            return res.status(403).send('Error: Duplicate number.')
+            // console.log(err)
+            return res.status(403).json({
+                errcode: 403,
+                errmsg: '[Error] Duplicate number.'
+            })
         }
-        res.status(201).send('OK')
     })
-    req.getConnection(inserter)
 }
 
 // Get restaurant account.
-var get = function(req, res, next) {
+var getRestaurant = function(req, res, next) {
     // Valid the form data.
-    if (req.query.number === undefined || req.query.number === '') {
-        res.status(400).send('Error: wrong get format. Find no \'number\'.')
-        return
-    }
-
-    var sql = 'SELECT manager_number, restaurant_name, description,\
-     image_id, restaurant_number FROM restaurant WHERE manager_number=?',
-        value = [req.query.number]
-    
-    // Select the restaurant by number
-    var selector = db.selector(sql, value, function(err, result) {
-        if (err) {
-            if (result !== undefined) console.log(result)
-            console.log(err)
-            return res.status(500).send('Internal Server Error. Database error.')
+    var restaurant_id
+    if (req.session.restaurant_id === undefined) {
+        if (req.query.restaurant_id === undefined || req.query.restaurant_id === '') {
+            return res.status(400).json({
+                errcode: 400, 
+                errmsg: '[Error] wrong get format. Find no \'restaurant_id\'.'
+            })
         }
-        else if (result[0] === undefined) {
-            res.status(500).send('Internal Server Error. The restaurant is not exist.')
+        else restaurant_id = req.query.restaurant_id
+    }
+    else restaurant_id = req.session.restaurant_id
+
+
+    Restaurant.get(restaurant_id)
+    .then(function(result) {
+        if (result === undefined) {
+            return res.status(403).json({
+                errcode: 403,
+                errmsg: '[Error] The restaurant is not exist.'
+            })
         }
         else {
-            res.status(201).send(result[0])
+            console.log(result)
+            var restaurant = result
+            return res.status(201).json({
+                code: 200,
+                msg: '[Success] Get restaurant successfully',
+                data: restaurant
+            })
         }
     })
-    req.getConnection(selector)
+    .catch(function(err) {
+        if (err) {
+            console.log(err)
+            return res.status(500).json({
+                errcode: 500,
+                errmsg: '[Error] Internal Server Error. Database error.',
+                errdata: err
+            })
+        }
+    })
 
 }
 
 module.exports = {
-    create: create,
-    get: get
+    registerRestaurant: registerRestaurant,
+    getRestaurant: getRestaurant
 }

@@ -4,7 +4,6 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var stylus = require('stylus');
-var router = express.Router();
 
 var app = express();
 
@@ -19,33 +18,11 @@ app.use(cookieParser());
 app.use(stylus.middleware(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'dist')));
 
-// Mysql connection middleware
-var mysql = require('mysql'),
-    myConnection = require('express-myconnection'),
-    dbOptions = {
-      host: '127.0.0.1',
-      user: 'root',
-      password: 'password',
-      database: 'zhidan'
-    };
-app.use(myConnection(mysql, dbOptions, 'pool'));
-
 // Redis stores session
 var expressSession = require('express-session');  // 该中间件使得req有session属性
 var RedisStore = require('connect-redis')(expressSession);
-var redisConfig={
-    'cookie' : {
-       'maxAge' : 1800000  // 30 * 60 * 1000 ms = 30 mins
-    },
-    'sessionStore' : {
-        'host' : '127.0.0.1',
-        'port' : '6379',
-        'pass' : 'password',
-        'db' : 1,
-        'ttl' : 1800, // 60 * 30 sec = 30 mins
-        'logErrors' : true
-    }
-}
+var config = require('./config/config')
+var redisConfig=config.redisConfig
 app.use(expressSession({
     name : 'sid',
     secret : 'zhidan',
@@ -56,19 +33,11 @@ app.use(expressSession({
     store : new RedisStore(redisConfig.sessionStore)
 }));
 
-// TODO: make route
-// controllers
-var session = require('./controllers/session');
-var restaurant = require('./controllers/restaurant');
-
 // routers
-router.post('/session', session.create)
-router.get('/session', session.get)
-router.delete('/session', session.delete)
-router.get('/restaurant', restaurant.get)
-router.post('/restaurant', restaurant.create)
-
-app.use(router);
+var auth = require('./controllers/session')
+var routes = require('./routes')
+app.use(auth.checkSession)
+app.use('/', routes)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
