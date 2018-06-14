@@ -26,7 +26,7 @@ router.post('/menu/dish', menuController.createDish)
 
 // order API
 router.post('/order', orderController.createOrder)
-router.get('/order', orderController.getUnfinishedOrders)
+router.get('/order', orderController.getOrders)
 router.put('/order', orderController.finishOrders)
 
 module.exports=router

@@ -3,7 +3,7 @@ var Restaurant = require('../models/restaurant')
 // Register restaurant account.
 var registerRestaurant = function(req, res, next) {
     // Valid the form data.
-    if (!req.body.number
+    if (!req.body.manager_number
         || !req.body.password
         || !req.body.restaurant_name) {
         console.log('[Error] wrong post format.')
@@ -17,7 +17,7 @@ var registerRestaurant = function(req, res, next) {
     var md5 = crypto.createHash('md5')
     var password = md5.update(req.body.password).digest('hex')
 
-    Restaurant.create(req.body.number, password, req.body.restaurant_name)
+    Restaurant.create(req.body.manager_number, password, req.body.restaurant_name)
     .then(function(result) {
         let restaurant = result[0]
         restaurant.categories = null
@@ -29,13 +29,12 @@ var registerRestaurant = function(req, res, next) {
     })
     .catch(function(err) {
         if (err) {
-            console.log('Error: Duplicate number.')
-            console.log(err)
+            console.log('[Error] Duplicate number.')
             return res.status(403).json({
                 errcode: 403,
                 errmsg: '[Error] Duplicate number.',
-		errdata: err
-	    })
+		        errdata: err
+	        })
         }
     })
 }
@@ -66,7 +65,6 @@ var getRestaurant = function(req, res, next) {
             })
         }
         else {
-            console.log(result)
             var restaurant = result
             return res.status(201).json({
                 code: 200,

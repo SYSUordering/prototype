@@ -2,6 +2,9 @@ var Order = require('../models/order')
 var Sale = require('../models/sale')
 var Restaurant = require('../models/restaurant')
 var createOrder = function(req, res, next) {
+    req.body.total_price = Number(req.body.total_price)
+    req.body.desk_id = Number(req.body.desk_id)
+    req.body.restaurant_id = Number(req.body.restaurant_id)
     // 校验表单format
     if (!req.body.restaurant_id
         || !req.body.total_price
@@ -17,13 +20,13 @@ var createOrder = function(req, res, next) {
         })
     }
     // 载入数据库，返回订单信息，返回订单号
-    Order.create(req.body.restaurant_id, req.body.total_price, req.dis)
+    Order.create(req.body.restaurant_id, req.body.total_price, req.body.dish_number,  req.body.tableware, req.body.desk_id)
     .then(function(result) {
         // 载入sale信息
         var newOrder=result[0]
-        return Sale.create(req.body.dish_list)
+        return Sale.create(req.body.dish_list, newOrder.order_id, req.body.restaurant_id)
         .then(function(result) {
-            newOrder.dish_list = dish_list
+            newOrder.dish_list = req.body.dish_list
             return newOrder
         })
     })
@@ -33,17 +36,17 @@ var createOrder = function(req, res, next) {
         .then(function(result) {
             if (result[0]) {
                 // 当天订单号，订单号+1
-                return Restaurant.update_order_add(restaurant_id)
+                return Restaurant.update_order_add(req.body.restaurant_id)
                 .then(function(result) {
-                    newOrder.order_number = result[0].order_counter
+                    newOrder.order_number = result[1][0]['@ud']
                     return newOrder
                 })
             }
             else {
                 // 非当天订单号，订单号清0
-                return Restaurant.update_order_zero(restaurant_id)
+                return Restaurant.update_order_zero(req.body.restaurant_id)
                 .then(function(result) {
-                    newOrder.order_number = result[0].order_counter
+                    newOrder.order_number = 1
                     return newOrder
                 })
             }
@@ -68,13 +71,21 @@ var createOrder = function(req, res, next) {
     })
 }
 
-// 获取未完成订单
-var getUnfinishedOrders = function(req, res, next) {
-    Order.get_unfinished(req.session.restaurant_id)
+// 获取订单
+var getOrders = function(req, res, next) {
+    // query options: date
+    if (!req.query.date) {
+        console.log('[Error] wrong query format.')
+        return res.status(400).json({
+            errcode: 400,
+            errmsg: '[Error] wrong query format.'
+        })
+    }
+    Order.get(req.session.restaurant_id, req.query.date)
     .then(function(result) {
         return res.status(200).json({
             code: 200,
-            msg: '[Success] Get unfinished order successfully.',
+            msg: '[Success] Get order successfully.',
             data: result
         })
     })
@@ -93,12 +104,12 @@ var getUnfinishedOrders = function(req, res, next) {
 // 更新订单状态
 var finishOrders =  function(req, res, next) {
      // 校验表单format
-     if (!req.body.order_list
-        || req.body.order_list.length) {
-        console.log('[Error] wrong post format.')
+    if (!req.body.order_list
+        || !req.body.order_list.length) {
+        console.log('[Error] wrong put format.')
         return res.status(400).json({
             errcode: 400,
-            errmsg: '[Error] wrong post format.'
+            errmsg: '[Error] wrong put format.'
         })
     }
 
@@ -106,7 +117,8 @@ var finishOrders =  function(req, res, next) {
     .then(function(result) {
         return res.status(200).json({
             code: 200,
-            msg: '[Success] Orders finish.'
+            msg: '[Success] Orders finish.',
+            data: result
         })
     })
     .catch(function(err) {
@@ -125,6 +137,6 @@ var finishOrders =  function(req, res, next) {
 
 module.exports = {
     createOrder: createOrder,
-    getUnfinishedOrders: getUnfinishedOrders,
+    getOrders: getOrders,
     finishOrders: finishOrders
 }

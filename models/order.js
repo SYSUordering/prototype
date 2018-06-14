@@ -1,10 +1,12 @@
 var db=require('./db')
 
-var insert_sql = 'INSERT INTO order (restaurant_id, total_price, dish_number, tableware, desk_id, state) '+
+var insert_sql = 'INSERT INTO meal_order (restaurant_id, total_price, dish_number, tableware, desk_id, state) '+
                 'VALUES (?, ?, ?, ?, ?, \'未完成\')'
-var select_sql = 'SELECT * FROM order WHERE order_id=?'
-var select_unfinished_sql = 'SELECT * FROM order WHERE restaurant_id=? AND state=\'未完成\''
-var update_sql = 'UPDATE order SET state=\'已完成\' WHERE order_id IN ? AND restaurant_id=?'
+var select_sql = 'SELECT * FROM meal_order WHERE order_id=?'
+var select_date_sql = 'SELECT * FROM meal_order WHERE restaurant_id=? '+
+                    'AND TIMESTAMPDIFF(MINUTE, TIMESTAMP(?), date)>=0 '+
+                    'AND TIMESTAMPDIFF(MINUTE, TIMESTAMP(?), date)<24*60'
+var update_sql_ = 'UPDATE meal_order SET state=\'已完成\' WHERE order_id IN $ AND restaurant_id=?'
 
 module.exports = {
     create: function(restaurant_id, total_price, dish_number, tableware, desk_id) {
@@ -13,8 +15,8 @@ module.exports = {
             return db.queryDb(select_sql, [result.insertId])
         })
     },
-    get_unfinished: function(restaurant_id) {
-        return db.queryDb(select_unfinished_sql, [restaurant_id])
+    get: function(restaurant_id, date) {
+        return db.queryDb(select_date_sql, [restaurant_id, date, date])
     },
     update_orders: function(order_list, restaurant_id) {
         order_id_list = '('
@@ -25,7 +27,8 @@ module.exports = {
             }
         }
         order_id_list += ')'
-        
-        return db.queryDb(update_sql, [order_id_list, restaurant_id])
+        update_sql = update_sql_.replace("$", order_id_list);
+
+        return db.queryDb(update_sql, [restaurant_id])
     }
 }

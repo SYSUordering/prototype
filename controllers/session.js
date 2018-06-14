@@ -3,7 +3,7 @@ var Restaurant = require('../models/restaurant')
 // Create session, when login
 var createSession = function(req, res, next) {
     // Valid the form data.
-    if (!req.body.number || !req.body.password) {
+    if (!req.body.manager_number || !req.body.password) {
         return res.status(400).json({
             errcode:400,
             errmsg: '[Error] Wrong post formal.'
@@ -15,7 +15,7 @@ var createSession = function(req, res, next) {
     var password = md5.update(req.body.password).digest('hex')
 
 
-    Restaurant.valid(req.body.number, password)
+    Restaurant.valid(req.body.manager_number, password)
     .then(function(result) {
         if (result[0] === undefined) {
             return res.status(403).json({
@@ -56,7 +56,6 @@ var updateSession = function (req, res, next) {
     if (req.session.manager_number) {
         // 已经是登录状态，更新session
         req.session.reload(function(err) {
-            console.log('[Error]', err)
             if (err) {
                 console.log('[Error]', err)
                 return res.status(500).json({
@@ -73,7 +72,7 @@ var updateSession = function (req, res, next) {
     }
     else {
         // 为登录
-        return res.status(401).json({
+        return res.status(403).json({
             errcode: 403,
             errmsg: '[Error] No login'
         })
@@ -84,7 +83,6 @@ var deleteSession = function (req, res, next) {
     if (req.session.manager_number) {
         // 已经是登录状态，更新session
         req.session.destroy(function(err) {
-            console.log('[Error]', err)
             if (err) {
                 console.log('[Error]', err)
                 return res.status(500).json({
@@ -102,7 +100,8 @@ var deleteSession = function (req, res, next) {
 }
 
 var checkSession = function (req, res, next) {
-    if (req.path === '/session' || req.path==='/restaurant' || req.session.manager_number) {
+    if (req.path === '/session' || req.path==='/restaurant' || req.session.manager_number
+        || (req.path === '/order' && req.method === 'POST')) {
       next();
     }
     else return res.status(401).json({

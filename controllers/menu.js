@@ -97,11 +97,8 @@ var getMenu = function(req, res, next) {
                 categories[index].dishes = []
             }
             // 填补categories中单品
-            console.log(categories)
             for (var index = 0; index < dishes.length; index++) {
                 var c_index = cmap[dishes[index].category_id]
-                console.log(c_index)
-                console.log(categories[c_index])
                 categories[c_index].dishes.push(dishes[index])
             }
             return res.status(200).json({

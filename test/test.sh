@@ -12,7 +12,7 @@ SES="$ROOT_URL/session"
 
 # POST /session
 echo "POST $SES"
-curl $SES -X POST  -d 'number=13128809301&password=123456' -D $COOKIE_FILE
+curl $SES -X POST  -d 'manager_number=13128809301&password=123456' -D $COOKIE_FILE
 echo $'\n'
 
 # GET /session
@@ -32,7 +32,7 @@ RES_DES="$ROOT_URL/restaurant/desk"
 
 # POST /restaurant
 echo "POST $RES"
-curl $RES -X POST -d 'number=13128809303&password=123456&restaurant_name=hahaha'
+curl $RES -X POST -d 'manager_number=13128809303&password=123456&restaurant_name=hahaha'
 echo $'\n'
 
 # GET /restaurant
@@ -72,17 +72,17 @@ ORD="$ROOT_URL/order"
 
 # POST /order
 echo "POST $ORD"
-curl $ORO -X POST -d 'dish_name=东坡肉&price=10.3&flavor=辣&description=主厨推荐&category_id=1'
+curl $ORD -X POST -H "Content-Type: application/json" -d '{"restaurant_id":1, "total_price": 334, "dish_number":1, "desk_id": 1, "tableware":"是", "dish_list":[{"dish_id":1}]}'
 echo $'\n'
 
 # GET /order
-echo "POST $ORD"
-curl $DIS -X POST -d 'dish_name=东坡肉&price=10.3&flavor=辣&description=主厨推荐&category_id=1'
+echo "GET $ORD"
+curl "$ORD?date=2018-06-14" -X GET -b $COOKIE_FILE
 echo $'\n'
 
 # PUT /order
-echo "POST $ORD" 
-curl $DIS -X POST -d 'dish_name=东坡肉&price=10.3&flavor=辣&description=主厨推荐&category_id=1'
+echo "PUT $ORD" 
+curl $ORD -X PUT -H "Content-Type: application/json" -b $COOKIE_FILE -d '{"order_list": [{"order_id": 1}, {"order_id": 2}, {"order_id": 3}, {"order_id": 4}, {"order_id": 4}]}'
 echo $'\n\n'
 
 
