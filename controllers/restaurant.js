@@ -3,12 +3,9 @@ var Restaurant = require('../models/restaurant')
 // Register restaurant account.
 var registerRestaurant = function(req, res, next) {
     // Valid the form data.
-    if (req.body.number === undefined 
-        || req.body.number === ''
-        || req.body.password === undefined 
-        || req.body.password === ''
-        || req.body.restaurant_name === undefined
-        || req.body.restaurant_name === '') {
+    if (!req.body.number
+        || !req.body.password
+        || !req.body.restaurant_name) {
         console.log('[Error] wrong post format.')
         return res.status(400).json({
             errcode: 400,
@@ -48,7 +45,8 @@ var getRestaurant = function(req, res, next) {
     // Valid the form data.
     var restaurant_id
     if (req.session.restaurant_id === undefined) {
-        if (req.query.restaurant_id === undefined || req.query.restaurant_id === '') {
+        req.query.restaurant_id = Number(req.query.restaurant_id)
+        if (!req.query.restaurant_id) {
             return res.status(400).json({
                 errcode: 400, 
                 errmsg: '[Error] wrong get format. Find no \'restaurant_id\'.'
@@ -90,7 +88,41 @@ var getRestaurant = function(req, res, next) {
 
 }
 
+// 更新桌子数目
+var updateDesk = function(req, res, next) {
+    req.body.desk_number = Number(req.body.desk_number)
+    // 校验update format
+    if (!req.body.desk_number) {
+        console.log('[Error] wrong post format.')
+        return res.status(400).json({
+            errcode: 400,
+            errmsg: '[Error] wrong post format.'
+        })
+    }
+
+    // 更新
+    Restaurant.update_desk(req.body.desk_number, req.session.restaurant_id)
+    .then(function(result) {
+        return res.status(200).json({
+            code: 200,
+            msg: 'Update desk_number successfully!',
+            data: result
+        })
+    })
+    .catch(function(err) {
+        if (err) {
+            console.log(err)
+            return res.status(500).json({
+                errcode: 500,
+                errmsg: '[Error] Internal Server Error. Database error.',
+                errdata: err
+            })
+        }
+    })
+}
+
 module.exports = {
     registerRestaurant: registerRestaurant,
-    getRestaurant: getRestaurant
+    getRestaurant: getRestaurant,
+    updateDesk: updateDesk
 }

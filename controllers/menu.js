@@ -3,8 +3,7 @@ var Dish = require('../models/dish')
 // 创建分类
 var createCategory = function(req, res, next) {
     // 校验请求格式
-    if (req.body.name === undefined 
-        || req.body.name === '') {
+    if (!req.body.category_name) {
         console.log('[Error] wrong post format.')
         return res.status(400).json({
             errcode: 400, 
@@ -12,7 +11,7 @@ var createCategory = function(req, res, next) {
         })
     }
     // 创建
-    Category.create(restaurant_id)
+    Category.create(req.session.restaurant_id, req.body.category_name)
     .then(function(result) {
         res.status(201).send({
             code: 201,
@@ -32,14 +31,12 @@ var createCategory = function(req, res, next) {
 // 创建菜品
 var createDish = function(req, res, next) {
     // 校验请求格式
-    if (req.body.dish_name === undefined 
-        || req.body.dish_name === ''
-        || req.body.price === undefined
-        || req.body.price === ''
+    req.body.price=Number(req.body.price)
+    if (!req.body.dish_name
+        || !req.body.price
         || req.body.flavor === undefined
         || req.body.description === undefined
-        || req.body.category_id === undefined
-        || req.body.category_id === '') {
+        || !req.body.category_id) {
         console.log('[Error] wrong post format.')
         return res.status(400).json({
             errcode: 400, 
@@ -71,7 +68,8 @@ var getMenu = function(req, res, next) {
     // 校验
     var restaurant_id
     if (req.session.restaurant_id === undefined) {
-        if (req.query.number === undefined || req.query.number === '') {
+        req.query.number = Number(req.query.number)
+        if (!req.query.number) {
             return res.status(400).json({
                 errcode: 400, 
                 errmsg: '[Error] wrong get format. Find no \'number\'.'
@@ -95,14 +93,29 @@ var getMenu = function(req, res, next) {
             // 记录 category_id 对应index
             var cmap = {}
             for (var index = 0; index < categories.length; index++) {
-                cmap[categories[index].categories_id] = index
+                cmap[categories[index].category_id] = index
+                categories[index].dishes = []
             }
             // 填补categories中单品
+            console.log(categories)
             for (var index = 0; index < dishes.length; index++) {
                 var c_index = cmap[dishes[index].category_id]
+                console.log(c_index)
+                console.log(categories[c_index])
                 categories[c_index].dishes.push(dishes[index])
             }
-            return categories
+            return res.status(200).json({
+                code: 200,
+                msg: '[Success] Get menu successfully',
+                data: categories
+            })
+        })
+    })
+    .catch(function(err) {
+        res.status(500).send({
+            errcode: 500,
+            errmsg: '[Error] Created fail.',
+            errdata: err
         })
     })
 }

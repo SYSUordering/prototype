@@ -3,10 +3,7 @@ var Restaurant = require('../models/restaurant')
 // Create session, when login
 var createSession = function(req, res, next) {
     // Valid the form data.
-    if (req.body.number === undefined
-        || req.body.number === ''
-        || req.body.password === undefined
-        || req.body.password === '') {
+    if (!req.body.number || !req.body.password) {
         return res.status(400).json({
             errcode:400,
             errmsg: '[Error] Wrong post formal.'

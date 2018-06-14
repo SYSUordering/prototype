@@ -1,13 +1,13 @@
 var db=require('./db')
 
-var insert_sql = 'INSERT INTO dish (dish_name, price, flavor, description, restaurant_id, category_id) '+
+var insert_sql = 'INSERT INTO dish (dish_name, price, flavor, description, category_id, restaurant_id) '+
                 'VALUES (?, ?, ?, ?, ?, ?)'
 var select_sql = 'SELECT * FROM dish WHERE dish_id=?'
 var select_by_res_sql = 'SELECT * FROM dish WHERE restaurant_id=?'
 
 module.exports = {
-    create: function(dish_name, price, flavor, description, restaurant_id, category_id) {
-        return db.queryDb(insert_sql, [dish_name, price, flavor, description, restaurant_id, category_id])
+    create: function(dish_name, price, flavor, description, category_id, restaurant_id) {
+        return db.queryDb(insert_sql, [dish_name, price, flavor, description, category_id, restaurant_id])
         .then(function(result) {
             return db.queryDb(select_sql, result.insertId)
         })

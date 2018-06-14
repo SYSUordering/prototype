@@ -4,8 +4,8 @@ var insert_sql = 'INSERT INTO category (restaurant_id, name) VALUES (?, ?);'
 var select_sql = 'SELECT * FROM category WHERE restaurant_id = ?'
 
 module.exports = {
-    create: function(restaurant_id, name) {
-        return db.queryDb(insert_sql, [restaurant_id, name])
+    create: function(restaurant_id, category_name) {
+        return db.queryDb(insert_sql, [restaurant_id, category_name])
             .then(function(result) {
                 return db.queryDb(select_sql, [restaurant_id])
             })
