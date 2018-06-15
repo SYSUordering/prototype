@@ -20,7 +20,6 @@ var registerRestaurant = function(req, res, next) {
     Restaurant.create(req.body.manager_number, password, req.body.restaurant_name)
     .then(function(result) {
         let restaurant = result[0]
-        restaurant.categories = null
         return res.status(201).json({
             code: 201,
             msg: '[Success] Created',
@@ -58,15 +57,15 @@ var getRestaurant = function(req, res, next) {
 
     Restaurant.get(restaurant_id)
     .then(function(result) {
-        if (result === undefined) {
+        if (result[0] === undefined) {
             return res.status(403).json({
                 errcode: 403,
                 errmsg: '[Error] The restaurant is not exist.'
             })
         }
         else {
-            var restaurant = result
-            return res.status(201).json({
+            var restaurant = result[0]
+            return res.status(200).json({
                 code: 200,
                 msg: '[Success] Get restaurant successfully',
                 data: restaurant

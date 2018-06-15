@@ -6,6 +6,7 @@ var select_valid_sql = 'SELECT restaurant_id, manager_number FROM restaurant WHE
 var select_info_sql = 'SELECT restaurant_id, manager_number, restaurant_name, '+
                     'description, image_id, restaurant_number, desk_number, date '+
                     'FROM restaurant WHERE restaurant_id=?'
+var update_sql = 'UPDATE restaurant SET restaurant_name=?, description=?, restaurant_number=? WHERE restaurant_id=?'
 
 var update_desk_num_sql = 'UPDATE restaurant SET desk_number=? WHERE restaurant_id=?'
 
@@ -26,18 +27,9 @@ module.exports = {
     },
     get: function(restaurant_id) {
         return db.queryDb(select_info_sql, [restaurant_id])
-            .then(function(result) {
-                if (result[0] == undefined)
-                    return result[0]
-
-                var restaurant = result[0]
-                // 获取分类信息
-                return Category.get(restaurant.restaurant_id)
-                .then(function(categories) {
-                    restaurant.categories = categories
-                    return restaurant
-                })
-            })
+    },
+    update: function(restaurant_name, description, restaurant_number, restaurant_id) {
+        return db.queryDb(update_sql, [restaurant_name, description, restaurant_number, restaurant_id])
     },
     update_desk: function(desk_number, restaurant_id) {
         return db.queryDb(update_desk_num_sql, [desk_number, restaurant_id])

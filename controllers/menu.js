@@ -20,6 +20,7 @@ var createCategory = function(req, res, next) {
         })
     })
     .catch(function(err) {
+        console.log(err)
         res.status(500).send({
             errcode: 500,
             errmsg: '[Error] Created fail.',
