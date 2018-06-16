@@ -46,7 +46,8 @@ var createDish = function(req, res, next) {
     }
     var image_url = ''
     if (req.file) {
-        image_url = 'http://zhidan.site:8080/'+req.file.filename
+	// image_url = 'http://zhidan.site:8080/'+req.file.filename
+	    image_url = req.file.filename
     }
 
     // 创建
