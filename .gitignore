@@ -1,3 +1,4 @@
 **/.DS_Store
 dist
+uploads/*
 swagger.yaml

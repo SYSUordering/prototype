@@ -1,14 +1,30 @@
 var express = require('express')
 var router = express.Router()
 var multer  = require('multer')
+var crypto = require('crypto')
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
-      cb(null, 'uploads')
+        cb(null, 'uploads')
     },
     filename: function (req, file, cb) {
-      cb(null, file.fieldname + '-' + Date.now())
+        if (req.session.restaurant_id) {
+            var md5 = crypto.createHash('md5')
+
+            file.originalname = file.originalname.replace(' ', '-')
+            var names = file.originalname.split('.')
+            
+            var restaurant_id = req.session.restaurant_id.toString()
+            var date = Date.now()
+            var type = names.pop()
+            var file_name = names.join('.')
+            name = file_name + '_' + restaurant_id + '_' + date
+            
+            name = md5.update(name).digest('hex')
+
+            cb(null, name + '.' + type)
+        }
     }
-  })
+})
   
   var upload = multer({ storage: storage })
 
@@ -32,7 +48,7 @@ router.put('/restaurant/desk', restaurantController.updateDesk)
 // menu API
 router.get('/menu', menuController.getMenu)
 router.post('/menu/category', menuController.createCategory)
-router.route('/menu/dish').post(upload.single('/avatar'), menuController.createDish)
+router.route('/menu/dish').post(upload.single('avatar'), menuController.createDish)
 
 // order API
 router.post('/order', orderController.createOrder)
