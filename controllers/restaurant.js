@@ -28,6 +28,7 @@ var registerRestaurant = function(req, res, next) {
     })
     .catch(function(err) {
         if (err) {
+	    console.log(err)
             console.log('[Error] Duplicate number.')
             return res.status(403).json({
                 errcode: 403,

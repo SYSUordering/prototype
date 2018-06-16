@@ -4,7 +4,7 @@ var multer  = require('multer')
 var crypto = require('crypto')
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, 'uploads')
+        cb(null, 'uploads/img')
     },
     filename: function (req, file, cb) {
         if (req.session.restaurant_id) {
