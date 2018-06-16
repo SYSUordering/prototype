@@ -2,3 +2,4 @@
 dist
 uploads/*
 swagger.yaml
+node_modules
