@@ -1,6 +1,16 @@
 var express = require('express')
 var router = express.Router()
-
+var multer  = require('multer')
+var storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, 'uploads')
+    },
+    filename: function (req, file, cb) {
+      cb(null, file.fieldname + '-' + Date.now())
+    }
+  })
+  
+  var upload = multer({ storage: storage })
 
 // TODO: make route
 // controllers
@@ -22,7 +32,7 @@ router.put('/restaurant/desk', restaurantController.updateDesk)
 // menu API
 router.get('/menu', menuController.getMenu)
 router.post('/menu/category', menuController.createCategory)
-router.post('/menu/dish', menuController.createDish)
+router.route('/menu/dish').post(upload.single('/avatar'), menuController.createDish)
 
 // order API
 router.post('/order', orderController.createOrder)

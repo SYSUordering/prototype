@@ -44,9 +44,14 @@ var createDish = function(req, res, next) {
             errmsg: '[Success] wrong post format.'
         })
     }
+    var image_url = ''
+    if (req.file) {
+        image_url = req.file.path
+        console.log(image_url)
+    }
 
     // 创建
-    Dish.create(req.body.dish_name, req.body.price, req.body.flavor, req.body.description,
+    Dish.create(req.body.dish_name, image_url, req.body.price, req.body.flavor, req.body.description,
             req.body.category_id, req.session.restaurant_id)
         .then(function(result) {
             res.status(201).send({
