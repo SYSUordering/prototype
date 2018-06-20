@@ -118,6 +118,36 @@ var updateDesk = function(req, res, next) {
         }
     })
 }
+// 更新餐厅账户信息
+var updateRestaurant = function(req, res, next) {
+    req.body.restaurant_number = Number(req.body.restaurant_number)
+    // 校验update format
+    if (!req.body.restaurant_number) {
+        console.log('[Error] wrong post format.')
+        return res.status(400).json({
+            errcode: 400,
+            errmsg: '[Error] wrong post format.'
+        })
+    }
+    Restaurant.update(req.body.restaurant_name, req.body.description, req.body.restaurant_number, req.session.restaurant_id)
+    .then(function(result) {
+        return res.status(200).json({
+            code: 200,
+            msg: 'Update restaurant successfully!',
+            data: result
+        })
+    })
+    .catch(function(err) {
+        if (err) {
+            console.log(err)
+            return res.status(500).json({
+                errcode: 500,
+                errmsg: '[Error] Internal Server Error. Database error.',
+                errdata: err
+            })
+        }
+    })
+}
 
 module.exports = {
     registerRestaurant: registerRestaurant,
