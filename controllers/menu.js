@@ -126,7 +126,19 @@ var getMenu = function(req, res, next) {
 
 // 更新分类名
 var updateCategory = function(req, res, next) {
-    Restaurant.update(req.body.category_name, req.session.category_id, req.session.restaurant_id)
+    var restaurant_id
+    if (req.session.restaurant_id === undefined) {
+        req.query.number = Number(req.query.number)
+        if (!req.query.number) {
+            return res.status(400).json({
+                errcode: 400, 
+                errmsg: '[Error] wrong get format. Find no \'number\'.'
+            })
+        }
+        else restaurant_id = req.query.restaurant_id
+    }
+    else restaurant_id = req.session.restaurant_id
+    Category.update(req.body.category_name, req.body.category_id, restaurant_id)
     .then(function(result) {
         return res.status(200).json({
             code: 200,
@@ -157,7 +169,7 @@ var updateDish = function(req, res, next) {
             errmsg: '[Error] wrong post format.'
         })
     }
-    Restaurant.update(req.session.dish_id,req.session.restaurant_id,req.body.dish_name,req.body.price,req.body.flavor,req.body.description,req.body.category_id)
+    Dish.update(req.body.dish_id,req.session.restaurant_id,req.body.dish_name,req.body.price,req.body.flavor,req.body.description,req.body.category_id)
     .then(function(result) {
         return res.status(200).json({
             code: 200,
@@ -180,5 +192,7 @@ var updateDish = function(req, res, next) {
 module.exports = {
     createCategory: createCategory,
     createDish: createDish,
-    getMenu: getMenu
+    getMenu: getMenu,
+    updateCategory: updateCategory,
+    updateDish: updateDish
 }
