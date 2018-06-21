@@ -140,8 +140,8 @@ var updateCategory = function(req, res, next) {
     else restaurant_id = req.session.restaurant_id
     Category.update(req.body.category_name, req.body.category_id, restaurant_id)
     .then(function(result) {
-        return res.status(200).json({
-            code: 200,
+        return res.status(201).json({
+            code: 201,
             msg: 'Update category successfully!',
             data: result
         })
@@ -171,8 +171,8 @@ var updateDish = function(req, res, next) {
     }
     Dish.update(req.body.dish_id,req.session.restaurant_id,req.body.dish_name,req.body.price,req.body.flavor,req.body.description,req.body.category_id)
     .then(function(result) {
-        return res.status(200).json({
-            code: 200,
+        return res.status(201).json({
+            code: 201,
             msg: 'Update desk_number successfully!',
             data: result
         })
