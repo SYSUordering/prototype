@@ -101,7 +101,7 @@ var deleteSession = function (req, res, next) {
 
 var checkSession = function (req, res, next) {
     if (req.path === '/session' || req.path==='/restaurant' || req.session.manager_number
-        || (req.path === '/order' && req.method === 'POST')) {
+        || (req.path === '/order' && req.method === 'POST') || (req.path === '/menu' && req.method === 'GET') ) {
       next();
     }
     else return res.status(401).json({

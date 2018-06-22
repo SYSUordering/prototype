@@ -44,11 +44,15 @@ router.delete('/session', sessionController.deleteSession)
 router.get('/restaurant', restaurantController.getRestaurant)
 router.post('/restaurant', restaurantController.registerRestaurant)
 router.put('/restaurant/desk', restaurantController.updateDesk)
+router.put('/restaurant', restaurantController.updateRestaurant)
 
 // menu API
 router.get('/menu', menuController.getMenu)
 router.post('/menu/category', menuController.createCategory)
 router.route('/menu/dish').post(upload.single('avatar'), menuController.createDish)
+router.put('/menu/category', menuController.updateCategory)
+router.put('/menu/dish', menuController.updateDish)
+
 
 // order API
 router.post('/order', orderController.createOrder)

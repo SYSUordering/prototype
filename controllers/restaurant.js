@@ -152,5 +152,6 @@ var updateRestaurant = function(req, res, next) {
 module.exports = {
     registerRestaurant: registerRestaurant,
     getRestaurant: getRestaurant,
-    updateDesk: updateDesk
+    updateDesk: updateDesk,
+    updateRestaurant: updateRestaurant
 }
