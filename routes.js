@@ -26,7 +26,7 @@ var storage = multer.diskStorage({
     }
 })
   
-  var upload = multer({ storage: storage })
+var upload = multer({ storage: storage })
 
 // TODO: make route
 // controllers
@@ -44,15 +44,14 @@ router.delete('/session', sessionController.deleteSession)
 router.get('/restaurant', restaurantController.getRestaurant)
 router.post('/restaurant', restaurantController.registerRestaurant)
 router.put('/restaurant/desk', restaurantController.updateDesk)
-router.put('/restaurant', restaurantController.updateRestaurant)
+router.route('/menu/dish').put(upload.single('avatar'), restaurantController.updateRestaurant)
 
 // menu API
 router.get('/menu', menuController.getMenu)
 router.post('/menu/category', menuController.createCategory)
 router.route('/menu/dish').post(upload.single('avatar'), menuController.createDish)
 router.put('/menu/category', menuController.updateCategory)
-router.put('/menu/dish', menuController.updateDish)
-<<<<<<< HEAD
+router.route('/menu/dish').put(upload.single('avatar'), menuController.updateDish)
 
 // order API
 router.post('/order', orderController.createOrder)

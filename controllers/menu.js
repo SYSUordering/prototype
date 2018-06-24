@@ -169,7 +169,13 @@ var updateDish = function(req, res, next) {
             errmsg: '[Error] wrong post format.'
         })
     }
-    Dish.update(req.body.dish_id,req.session.restaurant_id,req.body.dish_name,req.body.price,req.body.flavor,req.body.description,req.body.category_id)
+    if (req.file) {
+	// image_url = 'http://zhidan.site:8080/'+req.file.filename
+	    image_url = 'img/'+req.file.filename
+
+    }
+    Dish.update(req.body.dish_id, req.session.restaurant_id,
+        req.body.dish_name, req.body.price, req.body.flavor, req.body.description, req.body.category_id, image_url)
     .then(function(result) {
         return res.status(201).json({
             code: 201,
