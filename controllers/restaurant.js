@@ -129,6 +129,13 @@ var updateRestaurant = function(req, res, next) {
             errmsg: '[Error] wrong post format.'
         })
     }
+    var image_url = ''
+    if (req.file) {
+	// image_url = 'http://zhidan.site:8080/'+req.file.filename
+	    image_url = 'img/'+req.file.filename
+
+    }
+
     Restaurant.update(req.body.restaurant_name, req.body.description, req.body.restaurant_number, req.session.restaurant_id)
     .then(function(result) {
         return res.status(200).json({
