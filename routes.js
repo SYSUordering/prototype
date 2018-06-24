@@ -44,7 +44,7 @@ router.delete('/session', sessionController.deleteSession)
 router.get('/restaurant', restaurantController.getRestaurant)
 router.post('/restaurant', restaurantController.registerRestaurant)
 router.put('/restaurant/desk', restaurantController.updateDesk)
-router.route('/menu/dish').put(upload.single('avatar'), restaurantController.updateRestaurant)
+router.route('/restaurant').put(upload.single('avatar'), restaurantController.updateRestaurant)
 
 // menu API
 router.get('/menu', menuController.getMenu)
@@ -58,3 +58,4 @@ router.post('/order', orderController.createOrder)
 router.get('/order', orderController.getOrders)
 router.put('/order', orderController.finishOrders)
 
+module.exports = router
