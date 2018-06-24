@@ -52,11 +52,10 @@ router.post('/menu/category', menuController.createCategory)
 router.route('/menu/dish').post(upload.single('avatar'), menuController.createDish)
 router.put('/menu/category', menuController.updateCategory)
 router.put('/menu/dish', menuController.updateDish)
-
+<<<<<<< HEAD
 
 // order API
 router.post('/order', orderController.createOrder)
 router.get('/order', orderController.getOrders)
 router.put('/order', orderController.finishOrders)
 
-module.exports=router
