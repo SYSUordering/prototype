@@ -4,7 +4,7 @@ var Category = require('./category')
 var insert_sql = 'INSERT INTO restaurant (manager_number, manager_password, restaurant_name) VALUES (?, ?, ?)'
 var select_valid_sql = 'SELECT restaurant_id, manager_number FROM restaurant WHERE manager_number=? AND manager_password=?'
 var select_info_sql = 'SELECT restaurant_id, manager_number, restaurant_name, '+
-                    'description, image_id, restaurant_number, desk_number, date '+
+                    'description, image_url, restaurant_number, desk_number, date '+
                     'FROM restaurant WHERE restaurant_id=?'
 var update_sql = 'UPDATE restaurant SET restaurant_name=?, description=?, restaurant_number=? WHERE restaurant_id=?'
 

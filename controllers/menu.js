@@ -46,7 +46,9 @@ var createDish = function(req, res, next) {
     }
     var image_url = ''
     if (req.file) {
-        image_url = 'http://zhidan.site:8080/'+req.file.filename
+	// image_url = 'http://zhidan.site:8080/'+req.file.filename
+	    image_url = 'img/'+req.file.filename
+
     }
 
     // 创建
@@ -122,9 +124,75 @@ var getMenu = function(req, res, next) {
     })
 }
 
+// 更新分类名
+var updateCategory = function(req, res, next) {
+    var restaurant_id
+    if (req.session.restaurant_id === undefined) {
+        req.query.number = Number(req.query.number)
+        if (!req.query.number) {
+            return res.status(400).json({
+                errcode: 400, 
+                errmsg: '[Error] wrong get format. Find no \'number\'.'
+            })
+        }
+        else restaurant_id = req.query.restaurant_id
+    }
+    else restaurant_id = req.session.restaurant_id
+    Category.update(req.body.category_name, req.body.category_id, restaurant_id)
+    .then(function(result) {
+        return res.status(201).json({
+            code: 201,
+            msg: 'Update category successfully!',
+            data: result
+        })
+    })
+    .catch(function(err) {
+        if (err) {
+            console.log(err)
+            return res.status(500).json({
+                errcode: 500,
+                errmsg: '[Error] Internal Server Error. Database error.',
+                errdata: err
+            })
+        }
+    })
+}
+
+// 更新菜品信息
+var updateDish = function(req, res, next) {
+    req.body.category_id = Number(req.body.category_id)
+    // 校验update format
+    if (!req.body.category_id) {
+        console.log('[Error] wrong post format.')
+        return res.status(400).json({
+            errcode: 400,
+            errmsg: '[Error] wrong post format.'
+        })
+    }
+    Dish.update(req.body.dish_id,req.session.restaurant_id,req.body.dish_name,req.body.price,req.body.flavor,req.body.description,req.body.category_id)
+    .then(function(result) {
+        return res.status(201).json({
+            code: 201,
+            msg: 'Update desk_number successfully!',
+            data: result
+        })
+    })
+    .catch(function(err) {
+        if (err) {
+            console.log(err)
+            return res.status(500).json({
+                errcode: 500,
+                errmsg: '[Error] Internal Server Error. Database error.',
+                errdata: err
+            })
+        }
+    })
+}
 
 module.exports = {
     createCategory: createCategory,
     createDish: createDish,
-    getMenu: getMenu
+    getMenu: getMenu,
+    updateCategory: updateCategory,
+    updateDish: updateDish
 }

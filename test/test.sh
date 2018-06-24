@@ -1,4 +1,4 @@
-ROOT_URL="http://:3000"
+ROOT_URL="http://127.0.0.1:3000"
 COOKIE_FILE="cookie.txt"
 
 echo "Test API on $ROOT_URL"
@@ -30,12 +30,12 @@ echo "----- Restaurant API -----"
 RES="$ROOT_URL/restaurant"
 RES_DES="$ROOT_URL/restaurant/desk"
 
-# POST /restaurant
+# POST /restaurant  create restaurant
 echo "POST $RES"
 curl $RES -X POST -d 'manager_number=13128809303&password=123456&restaurant_name=hahaha'
 echo $'\n'
 
-# GET /restaurant
+# GET /restaurant  get restaurant
 echo "GET $RES"
 curl $RES -X GET -b $COOKIE_FILE
 echo $'\n'
@@ -45,26 +45,42 @@ echo "PUT $RES_DES"
 curl $RES_DES -X PUT -d 'desk_number=10' -b $COOKIE_FILE
 echo $'\n\n'
 
+# PUT /restaurant/ update zhanghu
+echo "PUT $RES"
+curl $RES -X PUT -d 'restaurant_name=newhaha&description=testupdate&restaurant_number=99' -b $COOKIE_FILE
+echo $'\n\n'
 
 echo "----- Menu API -----"
 MEN="$ROOT_URL/menu"
 CAT="$ROOT_URL/menu/category"
 DIS="$ROOT_URL/menu/dish"
 
-# POST /menu/dish
+# POST /menu/dish 创建分类
 echo "POST $CAT"
 curl $CAT -X POST -d 'category_name=主食' -b $COOKIE_FILE
 echo $'\n'
 
-# GET /menu
+# PUT /menu/category 更新分类名
+echo "PUT $CAT"
+curl $CAT -X PUT -d 'category_name=吃屎&category_id=1' -b $COOKIE_FILE
+echo $'\n\n'
+
+# GET /menu 创建菜品
 echo "GET $DIS"
 curl $DIS -X POST -d 'dish_name=东坡肉&price=10.3&flavor=辣&description=主厨推荐&category_id=1' -b $COOKIE_FILE
 echo $'\n'
 
-# POST /menu/category
+# PUT /menu/dish 更新菜品
+echo "PUT $DIS"
+curl $DIS -X PUT -d 'dish_name=屎&price=9999&flavor=hot&description=fresh&category_id=1' -b $COOKIE_FILE
+echo $'\n\n'
+
+# POST /menu/category 获取菜单
 echo "POST $MEN"
 curl $MEN -X GET -b $COOKIE_FILE
 echo $'\n\n'
+
+
 
 
 echo "----- Order API -----"
