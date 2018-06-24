@@ -58,3 +58,4 @@ router.post('/order', orderController.createOrder)
 router.get('/order', orderController.getOrders)
 router.put('/order', orderController.finishOrders)
 
+module.exports = router
