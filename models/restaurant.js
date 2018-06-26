@@ -6,7 +6,9 @@ var select_valid_sql = 'SELECT restaurant_id, manager_number FROM restaurant WHE
 var select_info_sql = 'SELECT restaurant_id, manager_number, restaurant_name, '+
                     'description, image_url, restaurant_number, desk_number, date '+
                     'FROM restaurant WHERE restaurant_id=?'
-var update_sql = 'UPDATE restaurant SET restaurant_name=?, description=?, restaurant_number=?, image_url=? WHERE restaurant_id=?'
+var update_image_sql = 'UPDATE restaurant SET restaurant_name=?, description=?, restaurant_number=?, image_url=? WHERE restaurant_id=?'
+var update_noimage_sql = 'UPDATE restaurant SET restaurant_name=?, description=?, restaurant_number=? WHERE restaurant_id=?'
+
 
 var update_desk_num_sql = 'UPDATE restaurant SET desk_number=? WHERE restaurant_id=?'
 
@@ -29,7 +31,10 @@ module.exports = {
         return db.queryDb(select_info_sql, [restaurant_id])
     },
     update: function(restaurant_name, description, restaurant_number, restaurant_id, image_url) {
-        return db.queryDb(update_sql, [restaurant_name, description, restaurant_number, image_url, restaurant_id])
+	if (image_url)
+	    return db.queryDb(update_image_sql, [restaurant_name, description, restaurant_number, image_url, restaurant_id])
+	else
+	    return db.queryDb(update_noimage_sql, [restaurant_name, description, restaurant_number, restaurant_id])
     },
     update_desk: function(desk_number, restaurant_id) {
         return db.queryDb(update_desk_num_sql, [desk_number, restaurant_id])
