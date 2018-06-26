@@ -194,15 +194,16 @@ var removeCategory = function(req, res, next) {
 
 // 更新菜品信息
 var updateDish = function(req, res, next) {
-    req.body.category_id = Number(req.body.category_id)
+    req.body.dish_id = Number(req.body.dish_id)
     // 校验update format
-    if (!req.body.category_id) {
+    if (!req.body.dish_id) {
         console.log('[Error] wrong post format.')
         return res.status(400).json({
             errcode: 400,
             errmsg: '[Error] wrong post format.'
         })
     }
+    var image_url = ''
     if (req.file) {
 	// image_url = 'http://zhidan.site:8080/'+req.file.filename
 	    image_url = 'img/'+req.file.filename
@@ -218,6 +219,7 @@ var updateDish = function(req, res, next) {
         })
     })
     .catch(function(err) {
+	console.log(err)
         if (err) {
             console.log(err)
             return res.status(500).json({
