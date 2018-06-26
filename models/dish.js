@@ -6,7 +6,7 @@ var select_sql = 'SELECT * FROM dish WHERE dish_id=?'
 var select_by_res_sql = 'SELECT * FROM dish WHERE restaurant_id=?'
 var update_image_sql = 'UPDATE dish SET dish_name=?, price=?, flavor=?, description=?, category_id=?, image_url=? '+
                 'WHERE dish_id=? AND restaurant_id=?'
-var update_noimage_sql = 'UPDATE dish SET dish_name=?, price?, flavor=?, description=?, category_id=?'+
+var update_noimage_sql = 'UPDATE dish SET dish_name=?, price?, flavor=?, description=?, category_id=? '+
 		'WHERE dish_id=? AND restaurant_id=?'
 var delete_sql = 'DELETE FROM dish WHERE dish_id=? AND restaurant_id=?'
 module.exports = {
