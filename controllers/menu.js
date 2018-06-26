@@ -158,6 +158,40 @@ var updateCategory = function(req, res, next) {
     })
 }
 
+
+
+// 删除分类
+var removeCategory = function(req, res, next) {
+    // 校验update format
+    if (!req.body.category_id) {
+        console.log('[Error] wrong post format.')
+        return res.status(400).json({
+            errcode: 400,
+            errmsg: '[Error] wrong post format.'
+        })
+    }
+
+    Category.delete(req.body.category_id, req.session.restaurant_id)
+    .then(function(result) {
+        return res.status(200).json({
+            code: 200,
+            msg: 'Delete category successfully!',
+            data: result
+        })
+    })
+    .catch(function(err) {
+        if (err) {
+            console.log(err)
+            return res.status(500).json({
+                errcode: 500,
+                errmsg: '[Error] Internal Server Error. Database error.',
+                errdata: err
+            })
+        }
+    })
+}
+
+
 // 更新菜品信息
 var updateDish = function(req, res, next) {
     req.body.category_id = Number(req.body.category_id)
@@ -179,7 +213,7 @@ var updateDish = function(req, res, next) {
     .then(function(result) {
         return res.status(201).json({
             code: 201,
-            msg: 'Update desk_number successfully!',
+            msg: 'Update dish successfully!',
             data: result
         })
     })
@@ -195,10 +229,44 @@ var updateDish = function(req, res, next) {
     })
 }
 
+// 删除菜品
+var removeDish = function(req, res, next) {
+    // 校验update format
+    if (!req.body.dish_id) {
+        console.log('[Error] wrong post format.')
+        return res.status(400).json({
+            errcode: 400,
+            errmsg: '[Error] wrong post format.'
+        })
+    }
+
+    Dish.delete(req.body.dish_id, req.session.restaurant_id)
+    .then(function(result) {
+        return res.status(200).json({
+            code: 200,
+            msg: 'Delete dish successfully!',
+            data: result
+        })
+    })
+    .catch(function(err) {
+        if (err) {
+            console.log(err)
+            return res.status(500).json({
+                errcode: 500,
+                errmsg: '[Error] Internal Server Error. Database error.',
+                errdata: err
+            })
+        }
+    })
+}
+
+
 module.exports = {
     createCategory: createCategory,
     createDish: createDish,
     getMenu: getMenu,
     updateCategory: updateCategory,
-    updateDish: updateDish
+    updateDish: updateDish,
+    removeDish: removeDish,
+    removeCategory: removeCategory
 }

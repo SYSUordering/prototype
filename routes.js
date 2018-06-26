@@ -51,7 +51,9 @@ router.get('/menu', menuController.getMenu)
 router.post('/menu/category', menuController.createCategory)
 router.route('/menu/dish').post(upload.single('avatar'), menuController.createDish)
 router.put('/menu/category', menuController.updateCategory)
-router.route('/menu/dish').put(upload.single('avatar'), menuController.updateDish)
+router.route('/menu/dish/detail').post(upload.single('avatar'), menuController.updateDish)
+router.delete('/menu/category', menuController.removeCategory)
+router.delete('/menu/dish', menuController.removeDish)
 
 // order API
 router.post('/order', orderController.createOrder)
