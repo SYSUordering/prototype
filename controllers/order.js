@@ -8,7 +8,6 @@ var createOrder = function(req, res, next) {
     // 校验表单format
     if (!req.body.restaurant_id
         || !req.body.total_price
-        || !req.body.dish_number
         || !req.body.desk_id
         || !req.body.tableware
         || !req.body.dish_list
@@ -20,7 +19,7 @@ var createOrder = function(req, res, next) {
         })
     }
     // 载入数据库，返回订单信息，返回订单号
-    Order.create(req.body.restaurant_id, req.body.total_price, req.body.dish_number,  req.body.tableware, req.body.desk_id)
+    Order.create(req.body.restaurant_id, req.body.total_price, Number(req.body.dish_list.length),  req.body.tableware, req.body.desk_id)
     .then(function(result) {
         // 载入sale信息
         var newOrder=result[0]
