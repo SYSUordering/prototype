@@ -49,10 +49,11 @@ router.route('/restaurant/detail').post(upload.single('avatar'), restaurantContr
 // menu API
 router.get('/menu', menuController.getMenu)
 router.post('/menu/category', menuController.createCategory)
-router.route('/menu/dish').post(upload.single('avatar'), menuController.createDish)
 router.put('/menu/category', menuController.updateCategory)
-router.route('/menu/dish/detail').post(upload.single('avatar'), menuController.updateDish)
 router.delete('/menu/category', menuController.removeCategory)
+router.route('/menu/dish').post(upload.single('avatar'), menuController.createDish)
+router.route('/menu/dish/detail').post(upload.single('avatar'), menuController.updateDish)
+router.put('/menu/dish', menuController.saleoutDishes)
 router.delete('/menu/dish', menuController.removeDish)
 
 // order API

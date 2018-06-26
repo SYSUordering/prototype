@@ -262,6 +262,37 @@ var removeDish = function(req, res, next) {
     })
 }
 
+// 告罄菜品
+var saleoutDishes = function(req, res, next) {
+    // 校验update format
+    if (!req.body.dish_id_list || req.body.sale_out === undefined || req.body.sale_out === '') {
+        console.log('[Error] wrong post format.')
+        return res.status(400).json({
+            errcode: 400,
+            errmsg: '[Error] wrong post format.'
+        })
+    }
+    req.body.sale_out = boolean(req.body.sale_out)
+    Dish.update_sale_out(req.body.sale_out, req.body.dish_id_list, req.session.restaurant_id)
+    .then(function(result) {
+        return res.status(200).json({
+            code: 200,
+            msg: 'Update dish successfully!',
+            data: result
+        })
+    })
+    .catch(function(err) {
+        if (err) {
+            console.log(err)
+            return res.status(500).json({
+                errcode: 500,
+                errmsg: '[Error] Internal Server Error. Database error.',
+                errdata: err
+            })
+        }
+    })
+}
+
 
 module.exports = {
     createCategory: createCategory,
@@ -269,6 +300,7 @@ module.exports = {
     getMenu: getMenu,
     updateCategory: updateCategory,
     updateDish: updateDish,
+    saleoutDishes: saleoutDishes,
     removeDish: removeDish,
     removeCategory: removeCategory
 }
