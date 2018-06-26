@@ -75,11 +75,11 @@ var getMenu = function(req, res, next) {
     // 校验
     var restaurant_id
     if (req.session.restaurant_id === undefined) {
-        req.query.restaurant_id = Number(req.query.number)
+        req.query.restaurant_id = Number(req.query.restaurant_id)
         if (!req.query.restaurant_id) {
             return res.status(400).json({
                 errcode: 400, 
-                errmsg: '[Error] wrong get format. Find no \'number\'.'
+                errmsg: '[Error] wrong get format. Find no \'restaurant_id\'.'
             })
         }
         else restaurant_id = req.query.restaurant_id
