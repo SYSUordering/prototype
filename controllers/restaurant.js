@@ -120,9 +120,8 @@ var updateDesk = function(req, res, next) {
 }
 // 更新餐厅账户信息
 var updateRestaurant = function(req, res, next) {
-    req.body.restaurant_number = Number(req.body.restaurant_number)
     // 校验update format
-    if (!req.body.restaurant_number) {
+    if (!req.body.restaurant_name || !req.body.description || !req.body.restaurant_number) {
         console.log('[Error] wrong post format.')
         return res.status(400).json({
             errcode: 400,
@@ -136,12 +135,13 @@ var updateRestaurant = function(req, res, next) {
 
     }
 
-    Restaurant.update(req.body.restaurant_name, req.body.description, req.body.restaurant_number, req.session.restaurant_id)
+    Restaurant.update(req.body.restaurant_name, req.body.description, req.body.restaurant_number, req.session.restaurant_id, image_url)
     .then(function(result) {
+	req.body.image_url = image_url
         return res.status(200).json({
             code: 200,
             msg: 'Update restaurant successfully!',
-            data: result
+            data: req.body
         })
     })
     .catch(function(err) {
