@@ -34,6 +34,7 @@ var sessionController = require('./controllers/session');
 var restaurantController = require('./controllers/restaurant');
 var menuController = require('./controllers/menu');
 var orderController = require('./controllers/order');
+var statisticsController = require('./controllers/statistics');
 
 // session API
 router.post('/session', sessionController.createSession)
@@ -60,5 +61,12 @@ router.delete('/menu/dish', menuController.removeDish)
 router.post('/order', orderController.createOrder)
 router.get('/order', orderController.getOrders)
 router.put('/order', orderController.finishOrders)
+
+// statistics API
+router.get('/statistics',statisticsController.SumByID)
+router.get('/statistics/day',statisticsController.SumByDay)
+router.get('/statistics/weekend',statisticsController.SumByWeekend)
+router.get('/statistics/month',statisticsController.SumByMonth)
+router.get('/statistics/year',statisticsController.SumByYear)
 
 module.exports = router

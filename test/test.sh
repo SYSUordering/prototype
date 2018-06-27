@@ -12,7 +12,7 @@ SES="$ROOT_URL/session"
 
 # POST /session
 echo "POST $SES"
-curl $SES -X POST  -d 'manager_number=13128809301&password=123456' -D $COOKIE_FILE
+curl $SES -X POST  -d 'manager_number=13128809303&password=123456' -D $COOKIE_FILE
 echo $'\n'
 
 # GET /session
@@ -88,12 +88,12 @@ ORD="$ROOT_URL/order"
 
 # POST /order
 echo "POST $ORD"
-curl $ORD -X POST -H "Content-Type: application/json" -d '{"restaurant_id":1, "total_price": 334, "dish_number":1, "desk_id": 1, "tableware":"是", "dish_list":[{"dish_id":1}]}'
+curl $ORD -X POST -H "Content-Type: application/json" -d '{"restaurant_id":3, "total_price": 334, "dish_number":1, "desk_id": 1, "tableware":"是", "dish_list":[{"dish_id":1}]}'
 echo $'\n'
 
 # GET /order
 echo "GET $ORD"
-curl "$ORD?date=2018-06-14" -X GET -b $COOKIE_FILE
+curl "$ORD?date=2018-06-21" -X GET -b $COOKIE_FILE
 echo $'\n'
 
 # PUT /order
@@ -102,3 +102,34 @@ curl $ORD -X PUT -H "Content-Type: application/json" -b $COOKIE_FILE -d '{"order
 echo $'\n\n'
 
 
+echo "----statistics API-----"
+SID="$ROOT_URL/statistics"
+SIDDAY="$ROOT_URL/statistics/day"
+SIDWEEKEND="$ROOT_URL/statistics/weekend"
+SIDMONTH="$ROOT_URL/statistics/month"
+SIDYEAR="$ROOT_URL/statistics/year"
+
+# 获取饭店营业总额
+echo "GET $SID"
+curl "$SID?restaurant_id=3" -X GET  -b $COOKIE_FILE
+echo $'\n\n'
+
+# 按天获取饭店营业额
+echo "GET &SIDDAY"
+curl "$SIDDAY?restaurant_id=3&date=2018-06-27" -X GET -b $COOKIE_FILE
+echo $'\n\n'
+
+# 按周获取饭店营业额
+echo "GET &SIDDAY"
+curl "$SIDWEEKEND?restaurant_id=3&date=2018-06-27" -X GET -b $COOKIE_FILE
+echo $'\n\n'
+
+# 按月获取饭店营业额
+echo "GET &SIDDAY"
+curl "$SIDMONTH?restaurant_id=3&date=2018-06-27" -X GET -b $COOKIE_FILE
+echo $'\n\n'
+
+# 按年获取饭店营业额
+echo "GET &SIDDAY"
+curl "$SIDYEAR?restaurant_id=3&date=2018-06-27" -X GET -b $COOKIE_FILE
+echo $'\n\n'

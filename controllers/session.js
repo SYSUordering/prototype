@@ -114,5 +114,5 @@ module.exports = {
     createSession: createSession,
     updateSession: updateSession,
     deleteSession: deleteSession,
-    checkSession: checkSession,
+    checkSession: checkSession
 }
