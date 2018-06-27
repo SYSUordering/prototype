@@ -142,10 +142,41 @@ var SumByYear = function(req,res,next) {
     })
 }
 
+// 按小时获取每天营业额
+var SumByHour = function(req,res,next) {
+	   // 校验获取 日期format
+    if (!req.query.date) {
+        console.log('[Error] wrong post format.')
+        return res.status(400).json({
+            errcode: 400,
+            errmsg: '[Error] wrong post format.'
+        })
+    }
+    Sale.getSumByHour(req.session.restaurant_id,req.body.date)
+    .then(function(result) {
+        return res.status(200).json({
+            code: 200,
+            msg: 'success getSumByDate!',
+            data: result
+        })
+    })
+    .catch(function(err) {
+        if (err) {
+            console.log(err)
+            return res.status(500).json({
+                errcode: 500,
+                errmsg: '[Error] Internal Server Error. Database error.',
+                errdata: err
+            })
+        }
+    })
+}
+
 module.exports = {
 	SumByID:SumByID,
 	SumByDay:SumByDay,
 	SumByWeekend:SumByWeekend,
 	SumByMonth:SumByMonth,
-	SumByYear:SumByYear
+	SumByYear:SumByYear,
+	SumByHour:SumByHour
 }

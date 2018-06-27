@@ -68,5 +68,5 @@ router.get('/statistics/day',statisticsController.SumByDay)
 router.get('/statistics/weekend',statisticsController.SumByWeekend)
 router.get('/statistics/month',statisticsController.SumByMonth)
 router.get('/statistics/year',statisticsController.SumByYear)
-
+router.get('/statistics/hour',statisticsController.SumByHour)
 module.exports = router
