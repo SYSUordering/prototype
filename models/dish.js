@@ -32,7 +32,7 @@ module.exports = {
     update_sale_out: function(sale_out, dish_id_list, restaurant_id) {
         var dish_str = '('
         for (var index = 0; index < dish_id_list.length; index++) {
-            dish_str += toString(dish_id_list[index])
+            dish_str += String(dish_id_list[index])
             if (index != dish_id_list.length-1) {
                 dish_str += ','
             }

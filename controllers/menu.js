@@ -272,7 +272,6 @@ var saleoutDishes = function(req, res, next) {
             errmsg: '[Error] wrong post format.'
         })
     }
-    req.body.sale_out = boolean(req.body.sale_out)
     Dish.update_sale_out(req.body.sale_out, req.body.dish_id_list, req.session.restaurant_id)
     .then(function(result) {
         return res.status(200).json({
