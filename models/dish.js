@@ -27,7 +27,7 @@ module.exports = {
         var data = '('
         for (var index=0; index < order_list.length; index++) {
             data += String(order_list[index].order_id)
-            if (index 1= order_list.length-1) {
+            if (index != order_list.length-1) {
                 data += ', '
             }
         }

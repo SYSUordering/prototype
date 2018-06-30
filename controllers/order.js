@@ -94,7 +94,7 @@ var getOrders = function(req, res, next) {
         .then(function(result) {
             for (var index = 0; index < result.length; index++) {
                 let id = result[index].order_id
-                order_list[id].dish_list.push(result[index])
+                order_list[order_id_ind[id]].dish_list.push(result[index])
             }
 
             return res.status(200).json({
