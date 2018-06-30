@@ -108,7 +108,7 @@ SIDDAY="$ROOT_URL/statistics/day"
 SIDWEEKEND="$ROOT_URL/statistics/weekend"
 SIDMONTH="$ROOT_URL/statistics/month"
 SIDYEAR="$ROOT_URL/statistics/year"
-
+SIDHOUR="$ROOT_URL/statistics/hour"
 # 获取饭店营业总额
 echo "GET $SID"
 curl "$SID?restaurant_id=3" -X GET  -b $COOKIE_FILE
@@ -132,4 +132,10 @@ echo $'\n\n'
 # 按年获取饭店营业额
 echo "GET &SIDDAY"
 curl "$SIDYEAR?restaurant_id=3&date=2018-06-27" -X GET -b $COOKIE_FILE
+echo $'\n\n'
+
+
+# 按小时获取饭店营业额
+echo "GET &SIDDAY"
+curl "$SIDHOUR?restaurant_id=3&date=2018-06-27" -X GET -b $COOKIE_FILE
 echo $'\n\n'

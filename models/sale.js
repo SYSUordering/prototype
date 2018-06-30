@@ -2,7 +2,7 @@ var db=require('./db')
 var insert_sql_ = 'INSERT INTO sale (dish_id, order_id, restaurant_id) VALUES '
 var getSum_by_restaurant_sql = 'SELECT sum(total_price) FROM meal_order WHERE restaurant_id=?'
 var getSum_by_day_sql = 'SELECT sum(total_price)  FROM meal_order WHERE restaurant_id=? AND TO_DAYS(TIMESTAMP(date)) = TO_DAYS(NOW())'
-var getSum_by_weekend_sql = 'SELECT sum(total_price)  FROM meal_order WHERE YEARWEEK(date_format(date,\'%Y-%m-%d\')) = YEARWEEK(now()) GROUP BY DATE_FORMAT( date,\'%Y-%m-%d\')'
+var getSum_by_weekend_sql = 'SELECT sum(total_price)  FROM meal_order WHERE restaurant_id=? AND YEARWEEK(date_format(date,\'%Y-%m-%d\')) = YEARWEEK(now()) GROUP BY DATE_FORMAT( date,\'%Y-%m-%d\')'
 var getSum_by_month_sql = 'SELECT sum(total_price) FROM meal_order WHERE restaurant_id=? AND YEAR(TIMESTAMP(date)) = YEAR(NOW()) GROUP BY DATE_FORMAT( date,\'%Y-%m-%d\')'
 var getSum_by_year_sql = 'SELECT sum(total_price) FROM meal_order WHERE restaurant_id=? AND YEAR(date)=YEAR(NOW())'
 var getSum_by_dayhour_sql = 'SELECT sum(total_price), DATE_FORMAT( date,\'%Y-%m-%d %H\')  AS date FROM meal_order WHERE restaurant_id=? AND TO_DAYS(TIMESTAMP(date)) = TO_DAYS(NOW()) GROUP BY DATE_FORMAT( date,\'%Y-%m-%d %H\')'
