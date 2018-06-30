@@ -1,5 +1,6 @@
 var Order = require('../models/order')
 var Sale = require('../models/sale')
+var Dish = require('../models/dish')
 var Restaurant = require('../models/restaurant')
 var createOrder = function(req, res, next) {
     req.body.total_price = Number(req.body.total_price)
@@ -82,10 +83,25 @@ var getOrders = function(req, res, next) {
     }
     Order.get(req.session.restaurant_id, req.query.date)
     .then(function(result) {
-        return res.status(200).json({
-            code: 200,
-            msg: '[Success] Get order successfully.',
-            data: result
+        var order_list = result
+        var order_id_ind = {}
+        for (var index = 0; index < order_list.length; index++) {
+            order_list[index].dish_list = []
+            order_id_ind[order_list[index].order_id] = index
+        }
+
+        return Dish.get_by_order(order_list)
+        .then(function(result) {
+            for (var index = 0; index < result.length; index++) {
+                let id = result[index].order_id
+                order_list[order_id_ind[id]].dish_list.push(result[index])
+            }
+
+            return res.status(200).json({
+                code: 200,
+                msg: '[Success] Get order successfully.',
+                data: order_list
+            })
         })
     })
     .catch(function(err) {

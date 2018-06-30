@@ -21,7 +21,7 @@ module.exports = {
     update_orders: function(order_list, restaurant_id) {
         order_id_list = '('
         for (var index = 0; index < order_list.length; index++) {
-            order_id_list += order_list[index].order_id.toString()
+            order_id_list += String(order_list[index])
             if (index !== order_list.length-1) {
                 order_id_list += ', '
             }
