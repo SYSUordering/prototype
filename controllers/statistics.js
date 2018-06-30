@@ -32,7 +32,7 @@ var SumByDay = function(req,res,next) {
             errmsg: '[Error] wrong post format.'
         })
     }
-    Sale.getSumByDay(req.session.restaurant_id,req.query.date)
+    Sale.getSumByDay(req.session.restaurant_id, req.query.date)
     .then(function(result) {
         return res.status(200).json({
             code: 200,
@@ -62,7 +62,7 @@ var SumByWeekend = function(req,res,next) {
             errmsg: '[Error] wrong post format.'
         })
     }
-    Sale.getSumByWeekend(req.session.restaurant_id,req.body.date)
+    Sale.getSumByWeekend(req.session.restaurant_id, req.body.date)
     .then(function(result) {
         return res.status(200).json({
             code: 200,
@@ -92,7 +92,7 @@ var SumByMonth = function(req,res,next) {
             errmsg: '[Error] wrong post format.'
         })
     }
-    Sale.getSumByMonth(req.session.restaurant_id,req.body.date)
+    Sale.getSumByMonth(req.session.restaurant_id, req.body.date)
     .then(function(result) {
         return res.status(200).json({
             code: 200,
@@ -122,7 +122,7 @@ var SumByYear = function(req,res,next) {
             errmsg: '[Error] wrong post format.'
         })
     }
-    Sale.getSumByYear(req.session.restaurant_id,req.body.date)
+    Sale.getSumByYear(req.session.restaurant_id, req.body.date)
     .then(function(result) {
         return res.status(200).json({
             code: 200,
@@ -152,7 +152,7 @@ var SumByHour = function(req,res,next) {
             errmsg: '[Error] wrong post format.'
         })
     }
-    Sale.getSumByHour(req.session.restaurant_id,req.body.date)
+    Sale.getSumByHour(req.session.restaurant_id, req.body.date)
     .then(function(result) {
         return res.status(200).json({
             code: 200,
